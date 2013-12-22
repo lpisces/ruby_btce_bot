@@ -1,0 +1,33 @@
+GEM
+  remote: http://ruby.taobao.org/
+  specs:
+    activesupport (4.0.2)
+      i18n (~> 0.6, >= 0.6.4)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    atomic (1.1.14)
+    btce (0.2.4)
+      monkey-patch
+    chronic (0.10.2)
+    i18n (0.6.9)
+    minitest (4.7.5)
+    monkey-patch (0.0.14)
+      activesupport
+    multi_json (1.8.2)
+    mysql2 (0.3.14)
+    thread_safe (0.1.3)
+      atomic
+    tzinfo (0.3.38)
+    whenever (0.9.0)
+      activesupport (>= 2.3.4)
+      chronic (>= 0.6.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  btce
+  mysql2
+  whenever
