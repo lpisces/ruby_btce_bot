@@ -78,6 +78,7 @@ def buy(ticker, amount, max_usd = 10)
 #    return false
 #  end
   rate = ticker.sell * 1.01
+  rate = format("%.3f", rate)
   amount_max = (max_usd / ticker.last) * 0.98
   amount = (amount > amount_max) ? amount_max : amount
   amount = format("%.3f",amount * 0.98).to_f
@@ -94,7 +95,8 @@ def sell(ticker, amount, max_usd = 10)
 #    log.info("less than 30 minutes since last trade. S")
 #    return false
 #  end
-  rate = ticker.sell
+  rate = ticker.sell * 0.99
+  rate = format("%.3f", rate)
   amount_max = (max_usd / ticker.last)
   amount = (amount > amount_max) ? amount_max : amount
   amount = format("%.3f",amount * 0.98).to_f
@@ -115,7 +117,7 @@ end
 
 ltc = 0
 usd = 0
-max_usd = 70
+max_usd = 500
 avg_minutes = 30
 now = Time.new.utc.to_i
 info = Btce::TradeAPI.new_from_keyfile.get_info.to_hash
@@ -138,10 +140,10 @@ if (market_value > max_usd * 0.95)
   trade_ltc  = 0
 end
 
-log.info("last:#{ticker.last} ltc:#{ltc} usd:#{usd}")
+log.info("last:#{ticker.last} ltc:#{ltc} usd:#{usd} total: #{market_value + usd}")
 log.info("avg_minutes:#{avg_minutes} ma5:#{format("%.4f", ma5(now, avg_minutes))} ma10:#{format("%.4f", ma10(now, avg_minutes))} ma20:#{format("%.4f", ma20(now, avg_minutes))}")
 
-full = market_value.to_f > max_usd * 0.95
+full = market_value.to_f > (market_value + usd) * 0.95
 empty = !full
 
 if full 
