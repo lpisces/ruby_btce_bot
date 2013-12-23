@@ -69,15 +69,16 @@ def  sell_cond_1(timestamp, minutes, ticker)
 end
 
 #以下是交易函数
-def buy(ticker, amount, max_usd = 10)
-  now = Time.new.utc.to_i + 960
+def buy(ticker, amount, max_usd = 10, avg_minutes = 30)
+  now = Time.new.utc.to_i
   last = last_trade_timestamp
   log = Logger.new('../logs/ltc_usd_trade_1min.log')
 #  if (last > now) or (now - last < 30 * 60)
 #    log.info("less than 30 minutes since last trade. B")
 #    return false
 #  end
-  rate = ticker.sell * 1.01
+  #rate = ticker.sell * 1.01
+  rate = ma5(now, avg_minutes)
   rate = format("%.3f", rate)
   amount_max = (max_usd / ticker.last) * 0.98
   amount = (amount > amount_max) ? amount_max : amount
@@ -87,15 +88,16 @@ def buy(ticker, amount, max_usd = 10)
   log.info("#{r.to_s}")
 end
 
-def sell(ticker, amount, max_usd = 10)
-  now = Time.new.utc.to_i + 960
+def sell(ticker, amount, max_usd = 10, avg_minutes = 30)
+  now = Time.new.utc.to_i
   last = last_trade_timestamp
   log = Logger.new('../logs/ltc_usd_trade_1min.log')
 #  if (last > now) or (now - last < 30 * 60)
 #    log.info("less than 30 minutes since last trade. S")
 #    return false
 #  end
-  rate = ticker.sell * 0.99
+  #rate = ticker.sell * 0.99
+  rate = ma5(now, avg_minutes)
   rate = format("%.3f", rate)
   amount_max = (max_usd / ticker.last)
   amount = (amount > amount_max) ? amount_max : amount
@@ -150,14 +152,14 @@ if full
   log.info("status: full stack")
   if bear_avg(now, avg_minutes)
     log.warn("sell: bear avg")
-    sell(ticker, ltc, max_usd)
+    sell(ticker, ltc, max_usd, avg_minutes)
   end
 end
 if empty
   log.info("status: empty stack")
   if bull_avg(now, avg_minutes)
     log.warn("buy: bull avg")
-    buy(ticker, trade_ltc, max_usd - market_value)
+    buy(ticker, trade_ltc, max_usd - market_value, avg_minutes)
   end
 end
 
